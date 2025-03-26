@@ -11,11 +11,8 @@ RUN apt-get update && apt-get install -y \
     libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
-# Instalar huggingface_hub para baixar o modelo
-RUN pip install huggingface_hub
-
-# Baixar o modelo explicitamente
-RUN python -c "from huggingface_hub import hf_hub_download; hf_hub_download(repo_id='ds4sd/docling-models', filename='model_artifacts/layout/beehive_v0.0.5/model.pt', local_dir='/root/.cache/huggingface/hub')"
+# Criar diretório de cache com permissões adequadas
+RUN mkdir -p /root/.cache/huggingface/hub && chmod -R 777 /root/.cache
 
 COPY . .
 
