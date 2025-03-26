@@ -1,2 +1,12 @@
-flask==2.3.3
-docling==1.0.0  # Verifique a versão mais recente no PyPI
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+EXPOSE 5000
+
+CMD ["python", "app.py"]
