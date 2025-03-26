@@ -4,8 +4,12 @@ import os
 
 app = Flask(__name__)
 
+# Inicializar o converter globalmente apenas na primeira requisição
+converter = None
+
 @app.route('/process', methods=['POST'])
 def process_document():
+    global converter
     if 'file' not in request.files:
         return jsonify({"error": "Nenhum arquivo enviado"}), 400
     
@@ -14,8 +18,9 @@ def process_document():
     file.save(file_path)
 
     try:
-        # Inicializar o converter aqui, caso falhe, retorna erro
-        converter = DocumentConverter()
+        # Inicializar o converter na primeira execução
+        if converter is None:
+            converter = DocumentConverter()
         result = converter.convert(file_path)
         extracted_text = result.text if hasattr(result, 'text') else str(result)
         return jsonify({"result": extracted_text})
